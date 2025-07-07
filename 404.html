@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 – Page Not Found</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #ddd;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 600px;
+    }
+    .headline {
+      font-size: 6rem;
+      margin-bottom: 1rem;
+    }
+    .subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      color: #aaa;
+    }
+    .emoji {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      color: #121212;
+      background-color: #4f46e5;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #4338ca;
+    }
+    .illustration {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 600px) {
+      .headline { font-size: 4rem; }
+      .subtitle { font-size: 1.2rem; }
+      .emoji { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="headline">404</div>
+    <div class="subtitle">Whoops! We can't find the page you're looking for.</div>
+    <a href="/" class="btn">Go to Homepage</a>
+  </div>
+
+  <script>
+    // Optional: Umgeleitete Pfade (GitHub Pages SPA)
+    const redirectedPath = sessionStorage.getItem('redirectPath');
+    if (redirectedPath) {
+      sessionStorage.removeItem('redirectPath');
+      history.replaceState(null, '', redirectedPath);
+    }
+  </script>
+</body>
+</html>
