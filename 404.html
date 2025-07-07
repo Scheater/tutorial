@@ -54,18 +54,5 @@
   <p>The page could not be found.<br>You will be redirected automatically...</p>
   <a href="/">Back to home page</a>
   <div class="info">Frontier Cheats – Support Docs</div>
-
-  <script>
-    // Check if the path does not contain a file extension (e.g., /fivem/troubleshooting)
-    const redirectPath = window.location.pathname;
-    const hasExtension = /\.\w+$/.test(redirectPath);
-
-    if (!hasExtension) {
-      // Store the path temporarily for SPA redirect
-      sessionStorage.setItem('redirectPath', redirectPath);
-      // Redirect to GitHub Pages root
-      window.location.replace('/');
-    }
-  </script>
 </body>
 </html>
