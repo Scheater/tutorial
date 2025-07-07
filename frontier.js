@@ -1,97 +1,117 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const tabs = document.querySelectorAll('.sidebar-nav a[data-tab]');
-  const tabContents = document.querySelectorAll('.tab-content');
-  const searchInput = document.getElementById('search-input');
-  const searchButton = document.getElementById('search-button');
-  const darkModeToggle = document.querySelector('.dark-mode-toggle');
-  const modeIcon = document.getElementById('mode-icon');
-  const sidebar = document.querySelector('.sidebar');
-  const subNavs = document.querySelectorAll('.sub-nav');
-  const logoImg = document.querySelector('.logo-title img');
+document.addEventListener('DOMContentLoaded', function () {
+  var tabs = document.querySelectorAll('.sidebar-nav a[data-tab]');
+  var tabContents = document.querySelectorAll('.tab-content');
+  var searchInput = document.getElementById('search-input');
+  var searchButton = document.getElementById('search-button');
+  var darkModeToggle = document.querySelector('.dark-mode-toggle');
+  var modeIcon = document.getElementById('mode-icon');
+  var sidebar = document.querySelector('.sidebar');
+  var subNavs = document.querySelectorAll('.sub-nav');
+  var logoImg = document.querySelector('.logo-title img');
 
-  // Overlay für Darkmode-Animation
-  const overlay = document.createElement('div');
+  var overlay = document.createElement('div');
   overlay.id = 'mode-toggle-overlay';
   document.body.appendChild(overlay);
 
   function deactivateAllTabs() {
-    tabs.forEach(tab => tab.classList.remove('active'));
-    tabContents.forEach(tc => tc.classList.remove('active'));
-    subNavs.forEach(snav => snav.classList.remove('show'));
+    for (var k = 0; k < tabs.length; k++) {
+      tabs[k].classList.remove('active');
+    }
+    for (var l = 0; l < tabContents.length; l++) {
+      tabContents[l].classList.remove('active');
+    }
+    for (var m = 0; m < subNavs.length; m++) {
+      subNavs[m].classList.remove('show');
+    }
   }
 
-  function activateTab(id) {
+  function activateTab(tabName) {
     deactivateAllTabs();
 
-    const tabLink = document.querySelector(`.sidebar-nav a[data-tab="${id}"]`);
+    var tabLink = document.querySelector('.sidebar-nav a[data-tab="' + tabName + '"]');
     if (tabLink) {
       tabLink.classList.add('active');
-
-      const parentSubNav = tabLink.closest('.sub-nav');
+      var parentSubNav = tabLink.closest('.sub-nav');
       if (parentSubNav) {
         parentSubNav.classList.add('show');
-        const parentLiLink = parentSubNav.previousElementSibling;
+        var parentLiLink = parentSubNav.previousElementSibling;
         if (parentLiLink && parentLiLink.tagName === 'A') {
           parentLiLink.classList.add('active');
         }
       }
     }
 
-    const content = document.getElementById(id);
+    var content = document.getElementById(tabName);
     if (content) {
       content.classList.add('active');
       content.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // URL anpassen (z.B. /fivem/troubleshooting)
-    history.replaceState(null, '', `/${id}`);
+    history.replaceState(null, '', '/' + tabName);
   }
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', e => {
-      e.preventDefault();
-      const id = tab.getAttribute('data-tab');
-      if (id) {
-        activateTab(id);
-        if (window.innerWidth <= 768) sidebar.classList.remove('show');
+  // Neue Funktion außerhalb der Schleife
+  function handleTabClick(e) {
+    e.preventDefault();
+    var id = this.getAttribute('data-tab');
+    if (id) {
+      activateTab(id);
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('show');
       }
-    });
-  });
+    }
+  }
+
+  // Tabs Listener setzen
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', handleTabClick);
+  }
 
   // Sidebar Subnav toggle
-  const parentLinks = document.querySelectorAll('.sidebar-nav > ul > li > a');
-  parentLinks.forEach(link => {
-    const nextEl = link.nextElementSibling;
+  function handleSidebarClick(e) {
+    e.preventDefault();
+    var nextEl = this.nextElementSibling;
     if (nextEl && nextEl.classList.contains('sub-nav')) {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        nextEl.classList.toggle('show');
-      });
+      nextEl.classList.toggle('show');
     }
-  });
+  }
+
+  var parentLinks = document.querySelectorAll('.sidebar-nav > ul > li > a');
+  for (var j = 0; j < parentLinks.length; j++) {
+    parentLinks[j].addEventListener('click', handleSidebarClick);
+  }
 
   function performSearch() {
-    const query = searchInput.value.trim().toLowerCase();
+    var query = searchInput.value.trim().toLowerCase();
     if (!query) return;
 
-    let found = false;
-    for (const tab of tabs) {
-      const id = tab.getAttribute('data-tab');
-      const content = document.getElementById(id);
-      if (content && content.textContent.toLowerCase().includes(query)) {
+    var found = false;
+    for (var n = 0; n < tabs.length; n++) {
+      var tab = tabs[n];
+      var id = tab.getAttribute('data-tab');
+      var content = document.getElementById(id);
+      if (content && content.textContent.toLowerCase().indexOf(query) !== -1) {
         activateTab(id);
         found = true;
         break;
       }
     }
 
-    if (!found) alert('No results found.');
+    if (!found) {
+      alert('No results found.');
+    }
   }
 
-  searchButton?.addEventListener('click', performSearch);
-  searchInput?.addEventListener('keydown', e => {
-    if (e.key === 'Enter') performSearch();
-  });
+  if (searchButton) {
+    searchButton.addEventListener('click', performSearch);
+  }
+  if (searchInput) {
+    searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+  }
 
   function updateLogo(isDark) {
     if (!logoImg) return;
@@ -99,62 +119,63 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateDarkModeIcon(isDark) {
+    if (!modeIcon) return;
     modeIcon.src = isDark ? 'https://i.imgur.com/E0esEz2.png' : 'https://i.imgur.com/VMdzMBW.png';
     modeIcon.alt = isDark ? 'Enable light mode' : 'Enable dark mode';
   }
 
-  function toggleModeAnimation(enabled) {
-    return new Promise(resolve => {
-      overlay.classList.add('active');
-      setTimeout(() => {
-        document.body.classList.toggle('dark-mode', enabled);
-        updateDarkModeIcon(enabled);
-        updateLogo(enabled);
-      }, 250);
-      setTimeout(() => {
-        overlay.classList.remove('active');
-        resolve();
-      }, 500);
+  function toggleModeAnimation(enabled, callback) {
+    overlay.classList.add('active');
+    setTimeout(function () {
+      document.body.classList.toggle('dark-mode', enabled);
+      updateDarkModeIcon(enabled);
+      updateLogo(enabled);
+    }, 250);
+    setTimeout(function () {
+      overlay.classList.remove('active');
+      if (typeof callback === 'function') {
+        callback();
+      }
+    }, 500);
+  }
+
+  function setDarkMode(enabled) {
+    toggleModeAnimation(enabled, function () {
+      localStorage.setItem('darkMode', enabled ? 'true' : 'false');
     });
   }
 
-  async function setDarkMode(enabled) {
-    await toggleModeAnimation(enabled);
-    localStorage.setItem('darkMode', enabled ? 'true' : 'false');
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', function () {
+      var isDark = document.body.classList.contains('dark-mode');
+      setDarkMode(!isDark);
+    });
   }
 
-  darkModeToggle?.addEventListener('click', () => {
-    const isDark = document.body.classList.contains('dark-mode');
-    setDarkMode(!isDark);
-  });
-
-  const savedDarkMode = localStorage.getItem('darkMode');
+  var savedDarkMode = localStorage.getItem('darkMode');
   setDarkMode(savedDarkMode === 'true');
 
-  const menuToggle = document.querySelector('.menu-toggle');
+  var menuToggle = document.querySelector('.menu-toggle');
   if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
+    menuToggle.addEventListener('click', function () {
       sidebar.classList.toggle('show');
     });
   }
 
-  // ----- Redirect-Handling von 404-Seite -----
-  const redirectedPath = sessionStorage.getItem('redirectPath');
+  var redirectedPath = sessionStorage.getItem('redirectPath');
   if (redirectedPath) {
     sessionStorage.removeItem('redirectPath');
-
-    const tabId = redirectedPath.replace(/^\/+/, '').split('/').join('-');
-    if (document.getElementById(tabId)) {
-      activateTab(tabId);
+    var redirectedTab = redirectedPath.replace(/^\/+/, '').split('/').join('-');
+    if (document.getElementById(redirectedTab)) {
+      activateTab(redirectedTab);
     } else {
       activateTab('welcome');
     }
   } else {
-    // Erste echte URL (z.B. direkt auf /fivem/troubleshooting)
-    const path = window.location.pathname.replace(/^\/+/, '');
-    const tabId = path.split('/').join('-');
-    if (document.getElementById(tabId)) {
-      activateTab(tabId);
+    var path = window.location.pathname.replace(/^\/+/, '');
+    var pathTab = path.split('/').join('-');
+    if (document.getElementById(pathTab)) {
+      activateTab(pathTab);
     } else {
       activateTab('welcome');
     }
