@@ -95,11 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateLogo(isDark) {
     if (!logoImg) return;
-    logoImg.src = isDark ? 'logow.png' : 'logob.png';
+    logoImg.src = isDark ? 'https://i.imgur.com/3owGgzP.png' : 'https://i.imgur.com/W9L2gij.png';
   }
 
   function updateDarkModeIcon(isDark) {
-    modeIcon.src = isDark ? 'moon.png' : 'sun.png';
+    modeIcon.src = isDark ? 'https://i.imgur.com/E0esEz2.png' : 'https://i.imgur.com/VMdzMBW.png';
     modeIcon.alt = isDark ? 'Light Mode aktivieren' : 'Dark Mode aktivieren';
   }
 
