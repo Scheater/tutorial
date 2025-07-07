@@ -3,76 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 – Page Not Found</title>
+  <title>Page Not Found – Frontier Cheats</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #121212;
-      color: #ddd;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      flex-direction: column;
       height: 100vh;
+      margin: 0;
       text-align: center;
-      padding: 1rem;
     }
-    .container {
-      max-width: 600px;
+
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 0.5rem;
     }
-    .headline {
-      font-size: 6rem;
-      margin-bottom: 1rem;
-    }
-    .subtitle {
-      font-size: 1.5rem;
+
+    p {
+      font-size: 1.2rem;
       margin-bottom: 2rem;
-      color: #aaa;
     }
-    .emoji {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    .btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
+
+    a {
+      padding: 0.8rem 1.5rem;
       font-size: 1rem;
-      color: #121212;
-      background-color: #4f46e5;
-      border-radius: 4px;
+      background-color: #0009ff;
+      color: #fff;
       text-decoration: none;
-      font-weight: 600;
+      border-radius: 6px;
       transition: background-color 0.3s;
     }
-    .btn:hover {
-      background-color: #4338ca;
+
+    a:hover {
+      background-color: #0009ff;
     }
-    .illustration {
-      max-width: 100%;
-      height: auto;
-      margin-bottom: 2rem;
-    }
-    @media (max-width: 600px) {
-      .headline { font-size: 4rem; }
-      .subtitle { font-size: 1.2rem; }
-      .emoji { font-size: 2.5rem; }
+
+    .info {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #bbbbbb;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="headline">404</div>
-    <div class="subtitle">Whoops! We can't find the page you're looking for.</div>
-    <a href="/" class="btn">Go to Homepage</a>
-  </div>
+  <h1>404</h1>
+  <p>The page could not be found.<br>You will be redirected automatically...</p>
+  <a href="/">Back to home page</a>
+  <div class="info">Frontier Cheats – Support Docs</div>
 
   <script>
-    // Optional: Umgeleitete Pfade (GitHub Pages SPA)
-    const redirectedPath = sessionStorage.getItem('redirectPath');
-    if (redirectedPath) {
-      sessionStorage.removeItem('redirectPath');
-      history.replaceState(null, '', redirectedPath);
+    // Check if the path does not contain a file extension (e.g., /fivem/troubleshooting)
+    const redirectPath = window.location.pathname;
+    const hasExtension = /\.\w+$/.test(redirectPath);
+
+    if (!hasExtension) {
+      // Store the path temporarily for SPA redirect
+      sessionStorage.setItem('redirectPath', redirectPath);
+      // Redirect to GitHub Pages root
+      window.location.replace('/');
     }
   </script>
 </body>
