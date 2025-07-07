@@ -3,56 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Page Not Found – Frontier Cheats</title>
+  <title>404 – Page Not Found | Frontier Cheats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #121212;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      height: 100vh;
       margin: 0;
+      padding: 0;
+      background-color: #0d0d0d;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      animation: fadeIn 1s ease-in-out;
     }
 
     h1 {
-      font-size: 4rem;
-      margin-bottom: 0.5rem;
+      font-size: 6rem;
+      font-family: 'Orbitron', sans-serif;
+      color: #ff0000;
+      margin-bottom: 0.2em;
+      text-shadow: 0 0 20px rgba(255, 0, 25, 0.43);
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1em;
+      color: #cccccc;
     }
 
     p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      color: #888;
+      margin-bottom: 2em;
     }
 
     a {
-      padding: 0.8rem 1.5rem;
-      font-size: 1rem;
-      background-color: #0009ff;
+      display: inline-block;
+      padding: 0.8rem 2rem;
+      background: linear-gradient(135deg, #0009ff, #5f00ff);
       color: #fff;
       text-decoration: none;
-      border-radius: 6px;
-      transition: background-color 0.3s;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 12px rgba(0, 0, 255, 0.4);
     }
 
     a:hover {
-      background-color: #0009ff;
+      background: linear-gradient(135deg, #5f00ff, #0009ff);
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(0, 0, 255, 0.6);
     }
 
     .info {
-      margin-top: 1rem;
-      font-size: 0.9rem;
-      color: #bbbbbb;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
 <body>
-  <h1>404</h1>
-  <p>The page could not be found.<br>You will be redirected automatically...</p>
-  <a href="/">Back to home page</a>
-  <div class="info">Frontier Cheats – Support Docs</div>
+  <div class="container">
+    <h1>404</h1>
+    <h2>Oops! Page Not Found</h2>
+    <p>The page you're looking for doesn't exist or has been moved.</p>
+    <a href="/">Back to Homepage</a>
+    <div class="info">Frontier Cheats – Support & Docs Portal</div>
+  </div>
 </body>
 </html>
