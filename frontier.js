@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const subNavs = document.querySelectorAll('.sub-nav');
   const logoImg = document.querySelector('.logo-title img');
 
-  // Overlay für Darkmode-Animation erstellen
+  // Overlay für Darkmode-Animation
   const overlay = document.createElement('div');
   overlay.id = 'mode-toggle-overlay';
   document.body.appendChild(overlay);
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       content.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // Update URL (z. B. /fivem/troubleshooting)
+    // URL anpassen (z.B. /fivem/troubleshooting)
     history.replaceState(null, '', `/${id}`);
   }
 
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Sidebar Untermenü toggeln
+  // Sidebar Subnav toggle
   const parentLinks = document.querySelectorAll('.sidebar-nav > ul > li > a');
   parentLinks.forEach(link => {
     const nextEl = link.nextElementSibling;
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    if (!found) alert('Kein Ergebnis gefunden.');
+    if (!found) alert('No results found.');
   }
 
   searchButton?.addEventListener('click', performSearch);
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateDarkModeIcon(isDark) {
     modeIcon.src = isDark ? 'https://i.imgur.com/E0esEz2.png' : 'https://i.imgur.com/VMdzMBW.png';
-    modeIcon.alt = isDark ? 'Light Mode aktivieren' : 'Dark Mode aktivieren';
+    modeIcon.alt = isDark ? 'Enable light mode' : 'Enable dark mode';
   }
 
   function toggleModeAnimation(enabled) {
@@ -138,20 +138,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // -------- SPA Redirect von 404.html --------
+  // ----- Redirect-Handling von 404-Seite -----
   const redirectedPath = sessionStorage.getItem('redirectPath');
   if (redirectedPath) {
     sessionStorage.removeItem('redirectPath');
-    const tabId = redirectedPath.replace(/^\/+/, '').split('/').join('-'); // z. B. /fivem/troubleshooting → fivem-troubleshooting
+
+    const tabId = redirectedPath.replace(/^\/+/, '').split('/').join('-');
     if (document.getElementById(tabId)) {
       activateTab(tabId);
     } else {
       activateTab('welcome');
     }
   } else {
-    // Tab aktivieren basierend auf aktueller URL
+    // Erste echte URL (z.B. direkt auf /fivem/troubleshooting)
     const path = window.location.pathname.replace(/^\/+/, '');
-    const tabId = path.split('/').join('-'); // z. B. fivem/troubleshooting → fivem-troubleshooting
+    const tabId = path.split('/').join('-');
     if (document.getElementById(tabId)) {
       activateTab(tabId);
     } else {
