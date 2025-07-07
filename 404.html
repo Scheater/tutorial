@@ -61,7 +61,6 @@
     }
 
     a:hover {
-      background: linear-gradient(135deg, #0009ff, #5f00ff);
       transform: scale(1.05);
       box-shadow: 0 0 18px rgba(0, 0, 255, 0.6);
     }
@@ -88,9 +87,20 @@
   <div class="container">
     <h1>404</h1>
     <h2>Oops! Page Not Found</h2>
-    <p>The page you're looking for doesn't exist or has been moved.</p>
+    <p>The page you're looking for doesn't exist or has been moved.<br>Redirecting...</p>
     <a href="/">Back to Homepage</a>
     <div class="info">Frontier Cheats – Support & Docs Portal</div>
   </div>
+
+  <script>
+    // Nur redirecten, wenn keine Datei (wie .css/.png/etc) aufgerufen wird
+    const redirectPath = window.location.pathname;
+    const hasExtension = /\.\w+$/.test(redirectPath);
+
+    if (!hasExtension) {
+      sessionStorage.setItem('redirectPath', redirectPath);
+      window.location.replace('/');
+    }
+  </script>
 </body>
 </html>
