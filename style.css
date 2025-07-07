@@ -497,7 +497,6 @@ body.dark-mode pre code {
 .tab-content {
   display: none;
   padding: 2rem;
-  color: white; /* Weißer Text für Dark Mode */
 }
 
 .tab-content.active {
@@ -575,5 +574,35 @@ body.dark-mode pre code {
 
 #spoofer.active {
   display: block;
+}
+
+/* ===================== */
+/* Farbsteuerung für .tab-content je nach Modus */
+/* ===================== */
+body.dark-mode .tab-content {
+  color: var(--color-text-dark); /* Hellgrau/Weiß im Dark Mode */
+}
+
+body:not(.dark-mode) .tab-content {
+  color: var(--color-text-light); /* Dunkelgrau im Light Mode */
+}
+
+/* Optional: globales Überschreiben für Text innerhalb Tabs */
+body.dark-mode .tab-content h1,
+body.dark-mode .tab-content h2,
+body.dark-mode .tab-content h3,
+body.dark-mode .tab-content p,
+body.dark-mode .tab-content li,
+body.dark-mode .tab-content a {
+  color: var(--color-text-dark);
+}
+
+body:not(.dark-mode) .tab-content h1,
+body:not(.dark-mode) .tab-content h2,
+body:not(.dark-mode) .tab-content h3,
+body:not(.dark-mode) .tab-content p,
+body:not(.dark-mode) .tab-content li,
+body:not(.dark-mode) .tab-content a {
+  color: var(--color-text-light);
 }
 
