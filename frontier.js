@@ -139,10 +139,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 500);
   }
 
-  function setDarkMode(enabled) {
-    toggleModeAnimation(enabled, function () {
+  function setDarkMode(enabled, skipAnimation) {
+    if (skipAnimation) {
+      document.body.classList.toggle('dark-mode', enabled);
+      updateDarkModeIcon(enabled);
+      updateLogo(enabled);
       localStorage.setItem('darkMode', enabled ? 'true' : 'false');
-    });
+    } else {
+      toggleModeAnimation(enabled, function () {
+        localStorage.setItem('darkMode', enabled ? 'true' : 'false');
+      });
+    }
   }
 
   if (darkModeToggle) {
@@ -153,7 +160,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   var savedDarkMode = localStorage.getItem('darkMode');
-  setDarkMode(savedDarkMode === 'true');
+  if (savedDarkMode === null) {
+    updateDarkModeIcon(true);
+    updateLogo(true);
+  } else {
+    setDarkMode(savedDarkMode === 'true', true);
+  }
 
   var menuToggle = document.querySelector('.menu-toggle');
   if (menuToggle) {
