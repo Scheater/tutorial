@@ -1,195 +1,260 @@
-document.addEventListener('DOMContentLoaded', function () {
-  var tabs = document.querySelectorAll('.sidebar-nav a[data-tab]');
-  var tabContents = document.querySelectorAll('.tab-content');
-  var searchInput = document.getElementById('search-input');
-  var searchButton = document.getElementById('search-button');
-  var darkModeToggle = document.querySelector('.dark-mode-toggle');
-  var modeIcon = document.getElementById('mode-icon');
-  var sidebar = document.querySelector('.sidebar');
-  var subNavs = document.querySelectorAll('.sub-nav');
-  var logoImg = document.querySelector('.logo-title img');
+/* frontier.js — full build (GitBook-like UI)
+   - Tabs mit Hash (#tab)
+   - Subnav auf/zu
+   - Suche mit Highlight (schließt "refund-policy" von Auto-Open aus)
+   - Dark/Light Mode inkl. System-Theme
+   - Logo/Icon swap
+*/
+(() => {
+  "use strict";
 
-  var overlay = document.createElement('div');
-  overlay.id = 'mode-toggle-overlay';
-  document.body.appendChild(overlay);
+  // ---------- Helpers ----------
+  const $  = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  function deactivateAllTabs() {
-    for (var k = 0; k < tabs.length; k++) {
-      tabs[k].classList.remove('active');
-    }
-    for (var l = 0; l < tabContents.length; l++) {
-      tabContents[l].classList.remove('active');
-    }
-    for (var m = 0; m < subNavs.length; m++) {
-      subNavs[m].classList.remove('show');
-    }
+  // ---------- Elements ----------
+  const nav            = $('.sidebar-nav');
+  const tabLinks       = $$('.sidebar-nav a[data-tab]');
+  const panels         = $$('.tab-content');
+
+  const searchInput    = $('#search-input');
+  const searchButton   = $('#search-button');
+
+  const modeToggleBtn  = $('#mode-toggle');
+  const modeIcon       = $('#mode-icon');
+  const logoImg        = $('#logo-img');
+
+  // ---------- Config ----------
+  // Diese Panels werden NICHT durch Suche automatisch geöffnet
+  const NO_AUTO_OPEN_PANELS = new Set(['refund-policy']);
+
+  const STORAGE_DARK = 'darkMode'; // 'true' | 'false' | null (null = follow system)
+
+  const LOGO = {
+    dark:  'https://i.imgur.com/3owGgzP.png',
+    light: 'https://i.imgur.com/W9L2gij.png'
+  };
+  const ICON = {
+    dark:  'https://i.imgur.com/E0esEz2.png',
+    light: 'https://i.imgur.com/VMdzMBW.png'
+  };
+
+  // ---------- Lookup Maps ----------
+  const linkById  = Object.create(null);
+  const panelById = Object.create(null);
+  tabLinks.forEach(a => linkById[a.dataset.tab] = a);
+  panels.forEach(p => panelById[p.id] = p);
+
+  // ---------- Tabs ----------
+  function deactivateAll() {
+    tabLinks.forEach(a => {
+      a.classList.remove('active');
+      a.setAttribute('aria-selected', 'false');
+    });
+    panels.forEach(p => {
+      p.classList.remove('active');
+      p.setAttribute('aria-hidden', 'true');
+      p.tabIndex = -1;
+    });
   }
 
-  function activateTab(tabName) {
-    deactivateAllTabs();
-
-    var tabLink = document.querySelector('.sidebar-nav a[data-tab="' + tabName + '"]');
-    if (tabLink) {
-      tabLink.classList.add('active');
-      var parentSubNav = tabLink.closest('.sub-nav');
-      if (parentSubNav) {
-        parentSubNav.classList.add('show');
-        var parentLiLink = parentSubNav.previousElementSibling;
-        if (parentLiLink && parentLiLink.tagName === 'A') {
-          parentLiLink.classList.add('active');
-        }
+  function expandParents(link) {
+    const sub = link.closest('.sub-nav');
+    if (sub) {
+      sub.classList.add('show');
+      const parentLink = sub.previousElementSibling;
+      if (parentLink && parentLink.matches('a[data-tab]')) {
+        parentLink.classList.add('active');
+        parentLink.setAttribute('aria-selected', 'true');
       }
     }
-
-    var content = document.getElementById(tabName);
-    if (content) {
-      content.classList.add('active');
-      content.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    history.replaceState(null, '', '/' + tabName);
   }
 
-  // Neue Funktion außerhalb der Schleife
-  function handleTabClick(e) {
+  function setActiveTab(id, { updateHash = true } = {}) {
+    if (!panelById[id]) id = 'welcome';
+
+    deactivateAll();
+
+    const link  = linkById[id];
+    const panel = panelById[id];
+
+    if (link) {
+      link.classList.add('active');
+      link.setAttribute('aria-selected', 'true');
+      expandParents(link);
+    }
+    if (panel) {
+      panel.classList.add('active');
+      panel.setAttribute('aria-hidden', 'false');
+      panel.tabIndex = 0;
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    if (updateHash && location.hash.replace(/^#/, '') !== id) {
+      history.pushState(null, '', `#${id}`);
+    }
+  }
+
+  function initTabFromHash() {
+    const id = location.hash.replace(/^#/, '');
+    if (id && panelById[id]) {
+      setActiveTab(id, { updateHash: false });
+    } else {
+      setActiveTab('welcome', { updateHash: false });
+    }
+  }
+
+  window.addEventListener('hashchange', () => {
+    const id = location.hash.replace(/^#/, '');
+    if (panelById[id]) setActiveTab(id, { updateHash: false });
+  });
+
+  // Event delegation: Sidebar Links & Parent-Toggle
+  nav?.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-tab]');
+    if (!a) return;
+
+    // erlaubtes Öffnen in neuem Tab/Fenster
+    if (e.button === 1 || e.metaKey || e.ctrlKey) return;
+
     e.preventDefault();
-    var id = this.getAttribute('data-tab');
-    if (id) {
-      activateTab(id);
-      if (window.innerWidth <= 768) {
-        sidebar.classList.remove('show');
-      }
+
+    // Subnav toggeln, falls vorhanden
+    const maybeSub = a.nextElementSibling;
+    if (maybeSub && maybeSub.classList.contains('sub-nav')) {
+      maybeSub.classList.toggle('show');
     }
+
+    setActiveTab(a.dataset.tab);
+  });
+
+  // ---------- Search + Highlight ----------
+  function clearHighlights(root = document) {
+    $$('.highlight', root).forEach(mark => {
+      const parent = mark.parentNode;
+      if (!parent) return;
+      parent.replaceChild(document.createTextNode(mark.textContent), mark);
+      parent.normalize();
+    });
   }
 
-  // Tabs Listener setzen
-  for (var i = 0; i < tabs.length; i++) {
-    tabs[i].addEventListener('click', handleTabClick);
+  function escapeRegExp(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  // Sidebar Subnav toggle
-  function handleSidebarClick(e) {
-    e.preventDefault();
-    var nextEl = this.nextElementSibling;
-    if (nextEl && nextEl.classList.contains('sub-nav')) {
-      nextEl.classList.toggle('show');
-    }
-  }
+  function highlightInPanel(panel, query) {
+    const targets = $$('h1,h2,h3,h4,p,li', panel);
+    const re = new RegExp(escapeRegExp(query), 'gi');
+    let hits = 0;
 
-  var parentLinks = document.querySelectorAll('.sidebar-nav > ul > li > a');
-  for (var j = 0; j < parentLinks.length; j++) {
-    parentLinks[j].addEventListener('click', handleSidebarClick);
+    targets.forEach(el => {
+      if (el.closest('pre,code')) return; // Codeblöcke auslassen
+      const html = el.innerHTML;
+      if (!re.test(html)) return;
+      el.innerHTML = html.replace(re, (m) => {
+        hits++;
+        return `<mark class="highlight">${m}</mark>`;
+      });
+    });
+
+    return hits;
   }
 
   function performSearch() {
-    var query = searchInput.value.trim().toLowerCase();
-    if (!query) return;
+    const q = (searchInput?.value || '').trim();
+    if (!q) return;
 
-    var found = false;
-    for (var n = 0; n < tabs.length; n++) {
-      var tab = tabs[n];
-      var id = tab.getAttribute('data-tab');
-      var content = document.getElementById(id);
-      if (content && content.textContent.toLowerCase().indexOf(query) !== -1) {
-        activateTab(id);
-        found = true;
+    // Alte Highlights löschen
+    panels.forEach(p => clearHighlights(p));
+
+    // Finde erstes Panel mit Treffer, das NICHT ausgeschlossen ist
+    let targetPanel = null;
+    for (const p of panels) {
+      if (NO_AUTO_OPEN_PANELS.has(p.id)) continue;
+      const text = (p.textContent || '').toLowerCase();
+      if (text.includes(q.toLowerCase())) {
+        targetPanel = p;
         break;
       }
     }
 
-    if (!found) {
+    if (!targetPanel) {
       alert('No results found.');
+      return;
+    }
+
+    setActiveTab(targetPanel.id);
+    highlightInPanel(targetPanel, q);
+
+    const first = $('.highlight', targetPanel);
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  searchButton?.addEventListener('click', performSearch);
+  searchInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') performSearch();
+  });
+
+  // ---------- Dark / Light Mode ----------
+  function applyDarkUI(isDark) {
+    document.body.classList.toggle('dark-mode', isDark);
+    if (modeIcon) {
+      modeIcon.src = isDark ? ICON.dark : ICON.light;
+      modeIcon.alt = isDark ? 'Enable light mode' : 'Enable dark mode';
+    }
+    if (logoImg) {
+      logoImg.src = isDark ? LOGO.dark : LOGO.light;
     }
   }
 
-  if (searchButton) {
-    searchButton.addEventListener('click', performSearch);
-  }
-  if (searchInput) {
-    searchInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        performSearch();
-      }
-    });
+  function setDarkMode(isDark, { persist = true } = {}) {
+    applyDarkUI(isDark);
+    if (persist) localStorage.setItem(STORAGE_DARK, isDark ? 'true' : 'false');
   }
 
-  function updateLogo(isDark) {
-    if (!logoImg) return;
-    logoImg.src = isDark ? 'https://i.imgur.com/3owGgzP.png' : 'https://i.imgur.com/W9L2gij.png';
-  }
+  function initDarkMode() {
+    const saved = localStorage.getItem(STORAGE_DARK);
+    if (saved === null) {
+      // Beim ersten Besuch: System-Theme übernehmen
+      const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+      setDarkMode(!!prefersDark, { persist: false });
 
-  function updateDarkModeIcon(isDark) {
-    if (!modeIcon) return;
-    modeIcon.src = isDark ? 'https://i.imgur.com/E0esEz2.png' : 'https://i.imgur.com/VMdzMBW.png';
-    modeIcon.alt = isDark ? 'Enable light mode' : 'Enable dark mode';
-  }
-
-  function toggleModeAnimation(enabled, callback) {
-    overlay.classList.add('active');
-    setTimeout(function () {
-      document.body.classList.toggle('dark-mode', enabled);
-      updateDarkModeIcon(enabled);
-      updateLogo(enabled);
-    }, 250);
-    setTimeout(function () {
-      overlay.classList.remove('active');
-      if (typeof callback === 'function') {
-        callback();
-      }
-    }, 500);
-  }
-
-  function setDarkMode(enabled, skipAnimation) {
-    if (skipAnimation) {
-      document.body.classList.toggle('dark-mode', enabled);
-      updateDarkModeIcon(enabled);
-      updateLogo(enabled);
-      localStorage.setItem('darkMode', enabled ? 'true' : 'false');
+      // Auf System-Änderungen reagieren, solange der Nutzer keine manuelle Wahl gespeichert hat
+      try {
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        mq.addEventListener?.('change', (e) => {
+          if (localStorage.getItem(STORAGE_DARK) === null) {
+            setDarkMode(e.matches, { persist: false });
+          }
+        });
+      } catch { /* older browsers */ }
     } else {
-      toggleModeAnimation(enabled, function () {
-        localStorage.setItem('darkMode', enabled ? 'true' : 'false');
-      });
+      setDarkMode(saved === 'true', { persist: false });
     }
   }
 
-  if (darkModeToggle) {
-    darkModeToggle.addEventListener('click', function () {
-      var isDark = document.body.classList.contains('dark-mode');
-      setDarkMode(!isDark);
-    });
+  modeToggleBtn?.addEventListener('click', () => {
+    const isDark = document.body.classList.contains('dark-mode');
+    setDarkMode(!isDark, { persist: true });
+  });
+
+  // ---------- Subnav-Open für aktiven Link ----------
+  function ensureParentSubnavOpen() {
+    const active = $('.sidebar-nav a.active');
+    const sub = active?.closest('.sub-nav');
+    if (sub) sub.classList.add('show');
   }
 
-  var savedDarkMode = localStorage.getItem('darkMode');
-  if (savedDarkMode === null) {
-    updateDarkModeIcon(true);
-    updateLogo(true);
+  // ---------- Init ----------
+  function init() {
+    initDarkMode();
+    initTabFromHash();          // KEIN Tab-Persisting -> immer Hash oder 'welcome'
+    ensureParentSubnavOpen();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    setDarkMode(savedDarkMode === 'true', true);
+    init();
   }
-
-  var menuToggle = document.querySelector('.menu-toggle');
-  if (menuToggle) {
-    menuToggle.addEventListener('click', function () {
-      sidebar.classList.toggle('show');
-    });
-  }
-
-  var redirectedPath = sessionStorage.getItem('redirectPath');
-  if (redirectedPath) {
-    sessionStorage.removeItem('redirectPath');
-    var redirectedTab = redirectedPath.replace(/^\/+/, '').split('/').join('-');
-    if (document.getElementById(redirectedTab)) {
-      activateTab(redirectedTab);
-    } else {
-      activateTab('welcome');
-    }
-  } else {
-    var path = window.location.pathname.replace(/^\/+/, '');
-    var pathTab = path.split('/').join('-');
-    if (document.getElementById(pathTab)) {
-      activateTab(pathTab);
-    } else {
-      activateTab('welcome');
-    }
-  }
-});
+})();

@@ -1,248 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Meta -->
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Frontier Cheats Docs</title>
+  <meta name="description" content="Frontier tutorials, troubleshooting guides, and refund policy." />
 
-  <!-- OG Meta für Discord / WhatsApp / Vorschau -->
-  <meta property="og:title" content="Frontier Cheats Docs spoofer" />
-  <meta property="og:description" content="test spoofer ." />
+  <!-- Open Graph / Social Preview -->
+  <meta property="og:title" content="Frontier Cheats Docs — Spoofer" />
+  <meta property="og:description" content="Tutorials, setup notes, and policy information." />
   <meta property="og:image" content="https://i.imgur.com/0QQLUmD.jpeg" />
   <meta property="og:url" content="https://tutorial.frontier-cheats.com/spoofer" />
   <meta property="og:type" content="website" />
 
+  <!-- Icon -->
   <link rel="icon" href="https://i.imgur.com/hsmFM2R.jpeg" type="image/png" />
+
+  <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body class="dark-mode">
+  <!-- No-JS fallback -->
+  <noscript>
+    <div style="padding:1rem;background:#ffefe0;color:#5c2c00;text-align:center">
+      JavaScript is required for tab navigation. Please enable JavaScript.
+    </div>
+  </noscript>
 
-  <header class="top-bar">
+  <!-- Top Bar -->
+  <header class="top-bar" role="banner">
     <div class="logo-title">
-      <img id="logo-img" src="https://i.imgur.com/3owGgzP.png" alt="Logo" />
+      <img id="logo-img" src="https://i.imgur.com/3owGgzP.png" alt="Frontier Cheats Logo" />
       <span>Frontier Cheats</span>
     </div>
+
     <div class="actions">
-      <input type="text" id="search-input" placeholder="Search e.g. error code 15" />
-      <button id="search-button">Search</button>
-      <button class="dark-mode-toggle" id="mode-toggle" aria-label="Toggle dark mode">
+      <label for="search-input" class="sr-only">Search</label>
+      <input type="text" id="search-input" placeholder="Search e.g. error code 15" autocomplete="off" />
+      <button id="search-button" type="button" aria-label="Search">Search</button>
+
+      <button class="dark-mode-toggle" id="mode-toggle" type="button" aria-label="Toggle dark mode">
         <img id="mode-icon" src="https://i.imgur.com/E0esEz2.png" alt="" />
       </button>
     </div>
   </header>
 
   <div class="app-wrapper">
-
-    <aside class="sidebar">
-      <nav class="sidebar-nav">
-        <ul>
-          <li><a href="#" data-tab="welcome" class="active">Welcome</a></li>
-
-          <li class="nav-category">External</li>
+    <!-- Sidebar -->
+    <aside class="sidebar" aria-label="Primary">
+      <nav class="sidebar-nav" aria-label="Documentation sections">
+        <ul role="tree">
           <li>
-            <a href="#" data-tab="fivem">Fivem External</a>
-            <ul class="sub-nav">
-              <li><a href="#" data-tab="fivem-ud">How to Stay UD from All PC Checks</a></li>
-              <li><a href="#" data-tab="fivem-troubleshooting">Troubleshooting Guide (Fivem)</a></li>
+            <a id="tablink-welcome" href="#welcome" data-tab="welcome" class="active"
+               role="treeitem" aria-controls="welcome" aria-selected="true">Welcome</a>
+          </li>
+
+          <li class="nav-category" aria-hidden="true">External</li>
+          <li>
+            <a id="tablink-fivem" href="#fivem" data-tab="fivem"
+               role="treeitem" aria-controls="fivem" aria-selected="false">Fivem External</a>
+            <ul class="sub-nav" aria-label="Fivem subpages">
+              <li><a id="tablink-fivem-ud" href="#fivem-ud" data-tab="fivem-ud"
+                     role="treeitem" aria-controls="fivem-ud" aria-selected="false">How to Stay UD from All PC Checks</a></li>
+              <li><a id="tablink-fivem-troubleshooting" href="#fivem-troubleshooting" data-tab="fivem-troubleshooting"
+                     role="treeitem" aria-controls="fivem-troubleshooting" aria-selected="false">Troubleshooting Guide (Fivem)</a></li>
             </ul>
           </li>
 
-          <li class="nav-category">DMA</li>
+          <li class="nav-category" aria-hidden="true">DMA</li>
           <li>
-            <a href="#" data-tab="fortnite-dma">Fortnite DMA</a>
-            <ul class="sub-nav">
-              <li><a href="#" data-tab="fortnite-dma-troubleshooting">Troubleshooting Guide (DMA)</a></li>
+            <a id="tablink-fortnite-dma" href="#fortnite-dma" data-tab="fortnite-dma"
+               role="treeitem" aria-controls="fortnite-dma" aria-selected="false">Fortnite DMA</a>
+            <ul class="sub-nav" aria-label="DMA subpages">
+              <li><a id="tablink-fortnite-dma-troubleshooting" href="#fortnite-dma-troubleshooting" data-tab="fortnite-dma-troubleshooting"
+                     role="treeitem" aria-controls="fortnite-dma-troubleshooting" aria-selected="false">Troubleshooting Guide (DMA)</a></li>
             </ul>
           </li>
 
-          <li class="nav-category">Spoofer</li>
+          <li class="nav-category" aria-hidden="true">Spoofer</li>
           <li>
-            <a href="#" data-tab="spoofer">Spoofer</a>
-            <ul class="sub-nav">
-              <li><a href="#" data-tab="spoofer-troubleshooting">Troubleshooting Guide (Spoofer)</a></li>
-              <li><a href="#" data-tab="refund-policy">Refund & Exchange Policy</a></li>
+            <a id="tablink-spoofer" href="#spoofer" data-tab="spoofer"
+               role="treeitem" aria-controls="spoofer" aria-selected="false">Spoofer</a>
+            <ul class="sub-nav" aria-label="Spoofer subpages">
+              <li><a id="tablink-spoofer-troubleshooting" href="#spoofer-troubleshooting" data-tab="spoofer-troubleshooting"
+                     role="treeitem" aria-controls="spoofer-troubleshooting" aria-selected="false">Troubleshooting Guide (Spoofer)</a></li>
+              <li><a id="tablink-refund-policy" href="#refund-policy" data-tab="refund-policy"
+                     role="treeitem" aria-controls="refund-policy" aria-selected="false">Refund &amp; Exchange Policy</a></li>
             </ul>
           </li>
         </ul>
       </nav>
     </aside>
 
-    <main class="content">
-      <!-- Welcome -->
-      <div id="welcome" class="tab-content active">
+    <!-- Main -->
+    <main class="content" role="main">
+      <!-- Welcome (only active panel at load) -->
+      <section id="welcome" class="tab-content active" role="tabpanel"
+               aria-labelledby="tablink-welcome" aria-hidden="false" tabindex="0">
         <div class="welcome-banner">
           <img src="banner.png" alt="Welcome Banner" />
         </div>
         <div class="welcome-content">
           <h1>
-            Welcome 
+            Welcome
             <span class="waving-hand" role="img" aria-label="Waving Hand">👋</span>
           </h1>
-          <p>Welcome to the Frontier Tutorial Site</p>
-          <p>Here are the tutorials on how to use and fix your problems with your products.</p>
+          <p>Welcome to the Frontier Tutorial Site.</p>
+          <p>Find guides, FAQs, and policies to help you get started and resolve common issues.</p>
         </div>
-      </div>
+      </section>
 
       <!-- Fivem External -->
-      <div id="fivem" class="tab-content">
+      <section id="fivem" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-fivem" aria-hidden="true" tabindex="-1" data-searchable>
         <div class="fivem-wrapper">
           <h2>🔥 Fivem External</h2>
 
-          <p class="fivem-callout"><strong>🚀 Disable Windows Defender & Start the Loader!</strong></p>
+          <p class="fivem-callout"><strong>Quick Start</strong></p>
 
           <p class="fivem-download">
-            🔗 Download: 
-            <a href="https://your-download-link.com" target="_blank" rel="noopener noreferrer">Click Here!</a>
+            🔗 Download:
+            <a href="https://your-download-link.com" target="_blank" rel="noopener noreferrer">Click Here</a>
           </p>
 
           <div class="fivem-guide">
-            <p>1️⃣ Download the loader and run it</p>
-            <p>2️⃣ Enter your username and key, then click Login</p>
-            <p>3️⃣ Open FiveM and click Load in the loader</p>
-            <p>4️⃣ Join a server and enjoy the game!</p>
-            <p>5️⃣ Have fun and stay safe!</p>
+            <p>1️⃣ Download the client and run it.</p>
+            <p>2️⃣ Sign in with your account/key.</p>
+            <p>3️⃣ Launch FiveM and follow on-screen prompts.</p>
+            <p>4️⃣ Join a server and verify everything is working as expected.</p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- How to stay UD -->
-      <div id="fivem-ud" class="tab-content">
+      <!-- General guidance -->
+      <section id="fivem-ud" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-fivem-ud" aria-hidden="true" tabindex="-1" data-searchable>
         <div class="fivem-ud-wrapper">
-          <h2>🛡️ How to Stay UD from All PC Checks</h2>
-          <p>This is the Fivem external developed by <strong>Shield Cheats</strong>.</p>
-
-          <p>Follow these steps to stay UD from all PC checks and analytics:</p>
+          <h2>🛡️ Staying Safe &amp; Responsible</h2>
+          <p>General guidance to keep your environment stable.</p>
 
           <div class="fivem-ud-steps">
-            <p>1️⃣ <strong>Rename the loader:</strong> Rename it to something common, like <em>Brave</em>, <em>Google Chrome</em>, <em>Bing</em>, or similar.</p>
-
-            <p>2️⃣ <strong>Place the loader in a safe folder:</strong> For example, if renamed to Brave, paste it into the path:</p>
-            <pre><code>C:\Program Files\BraveSoftware</code></pre>
-
-            <p>3️⃣ <strong>If a PC check is required:</strong><br>
-              If you’ve been caught cheating and a PC check is initiated, rename the loader to something different and replace the renamed loader with the original file (e.g., rename it to Brave and replace the Brave executable).
-            </p>
-
-            <p>4️⃣ <strong>Always use a VPN</strong> while cheating to ensure privacy and security.</p>
+            <p><strong>Keep software up to date:</strong> Ensure your OS and required runtimes are current.</p>
+            <p><strong>Use unique credentials:</strong> Don’t share keys or accounts.</p>
+            <p><strong>Avoid risky downloads:</strong> Only use official links from trusted sources.</p>
+            <p><strong>Respect server rules:</strong> Always follow the terms and policies of the platforms you use.</p>
           </div>
-
-          <p><strong>✅ Enjoy and stay UD!</strong></p>
         </div>
-      </div>
+      </section>
 
       <!-- Fivem Troubleshooting -->
-      <div id="fivem-troubleshooting" class="tab-content">
+      <section id="fivem-troubleshooting" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-fivem-troubleshooting" aria-hidden="true" tabindex="-1" data-searchable>
         <div class="fivem-wrapper">
           <h2>🛠️ Troubleshooting Guide</h2>
-          <p>This guide applies to the FiveM external developed by Shield Cheats.</p>
+          <p>Try these general steps if something isn’t working as expected.</p>
 
-          <h3>How to Fix Issues if the Cheat Isn't Working</h3>
+          <h3>Basic Checks</h3>
+          <ul>
+            <li>Restart your PC and try again.</li>
+            <li>Install required Microsoft Visual C++ Runtimes if prompted.</li>
+            <li>Close background apps that might interfere (overlays, recorders).</li>
+          </ul>
 
-          <p><strong>🚨 Important:</strong> If you're using Windows version <strong>19045 or lower</strong>, it's not supported. Please upgrade your Windows for the cheat to function correctly.</p>
-
-          <h4>1️⃣ Download Required Files</h4>
-          <p>Make sure the following dependencies are installed:</p>
+          <h4>Useful Links</h4>
           <ul>
             <li>
-              <a href="https://www.microsoft.com/en-ph/download/details.aspx?id=48145" target="_blank" rel="noopener noreferrer">
-                Microsoft Visual C++ 2015 Redistributable Package (x64)
+              <a href="https://www.microsoft.com/en-us/download/details.aspx?id=48145" target="_blank" rel="noopener noreferrer">
+                Microsoft Visual C++ 2015–2019 Redistributable (x64)
               </a>
             </li>
             <li>
-              <a href="https://www.microsoft.com/en-us/download/details.aspx?id=6812" target="_blank" rel="noopener noreferrer">
-                Microsoft Visual C++ 2010 Redistributable Package (x86)
+              <a href="https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist" target="_blank" rel="noopener noreferrer">
+                Latest supported Visual C++ downloads
               </a>
             </li>
           </ul>
 
-          <h4>2️⃣ Disable Antivirus</h4>
-          <p>Temporarily disable any antivirus software, as it can block the cheat from running correctly.</p>
-          <p>If you're using Windows Defender:</p>
-          <pre>Settings → Update & Security → Windows Security → Virus & Threat Protection → Manage Settings → Turn off Real-time Protection</pre>
-
-          <h4>3️⃣ Run a System Check</h4>
-          <p>If problems persist, use the tool below to verify your system configuration:</p>
-          <a href="https://www.sordum.org/downloads/?st-defender-control" target="_blank" rel="noopener noreferrer">Download System Check Tool</a>
-          <p>This file is Encrypted because “Defender Control” Software may cause false alerts in VirusTotal</p>
-          <p>Password : sordum</p>
-
-          <h4>4️⃣ Reboot Your PC</h4>
-          <p>After following all steps, restart your PC and try using the cheat again.</p>
-
-          <p>If the issue continues, contact our support team for assistance!</p>
+          <p>If issues persist, reach out to support with logs and a clear description of the steps you tried.</p>
         </div>
-      </div>
+      </section>
 
       <!-- DMA -->
-      <div id="fortnite-dma" class="tab-content">Fortnite DMA (soon)</div>
-      <div id="fortnite-dma-troubleshooting" class="tab-content">(soon)</div>
+      <section id="fortnite-dma" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-fortnite-dma" aria-hidden="true" tabindex="-1" data-searchable>
+        <h2>Fortnite DMA</h2>
+        <p>Content coming soon.</p>
+      </section>
+
+      <section id="fortnite-dma-troubleshooting" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-fortnite-dma-troubleshooting" aria-hidden="true" tabindex="-1" data-searchable>
+        <h2>Fortnite DMA — Troubleshooting</h2>
+        <p>Content coming soon.</p>
+      </section>
 
       <!-- Spoofer -->
-      <div id="spoofer" class="tab-content">
+      <section id="spoofer" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-spoofer" aria-hidden="true" tabindex="-1" data-searchable>
         <h2>Spoofer</h2>
-        <p>This Spoofer is developed by Shield Cheats.</p>
+        <p>Overview and general usage notes.</p>
 
         <ol>
-          <li>
-            <strong>Download the Spoofer</strong><br />
-            <a href="https://Soon.com" target="_blank" style="color: var(--color-primary); text-decoration: underline;">
-              Click here to download the spoofer.
-            </a> Before downloading, make sure to disable real-time protection on your antivirus to avoid any issues during spoofing.
-          </li>
-
-          <li>
-            <strong>Login with your key</strong><br />
-            Just enter your key into the loader and click login.
-          </li>
-
-          <li>
-            <strong>Select the spoofing method</strong><br />
-            Choose one of the options:<br />
-            <ul>
-              <li><em>Virtualise</em>: temporary spoofer</li>
-              <li><em>Safe perm</em>: permanently spoofs your PC in a safe way</li>
-            </ul>
-          </li>
-
-          <li>
-            <strong>Wait for spoofing to complete</strong><br />
-            Let the spoofer complete the process. Do not close the spoofer during the operation.
-          </li>
+          <li><strong>Download:</strong> Use the official link only.</li>
+          <li><strong>Sign in:</strong> Enter your key and follow instructions.</li>
+          <li><strong>Choose mode:</strong> Select the appropriate option as documented by the vendor.</li>
+          <li><strong>Complete:</strong> Wait until the process finishes before closing.</li>
         </ol>
-      </div>
+
+        <p class="notice info">Note: Always use software responsibly and in compliance with all applicable terms and policies.</p>
+      </section>
 
       <!-- Spoofer Troubleshooting -->
-      <div id="spoofer-troubleshooting" class="tab-content">
+      <section id="spoofer-troubleshooting" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-spoofer-troubleshooting" aria-hidden="true" tabindex="-1" data-searchable>
         <h2>Troubleshooting Guide</h2>
-        <p>
-          If you experience issues with the spoofer, please consult this guide for common solutions
-          and steps to resolve technical problems quickly.
-        </p>
-      </div>
+        <p>If you experience issues, try basic checks first (restart, update, verify dependencies). For persistent problems, contact support with error details.</p>
+      </section>
 
-      <!-- Refund & Exchange Policy -->
-      <div id="refund-policy" class="tab-content">
-        <h2>Refund & Exchange Policy</h2>
-        <p>
-          We want to ensure fairness and transparency with all purchases. Please review our policy carefully:
-        </p>
+      <!-- Refund & Exchange Policy (hidden until clicked) -->
+      <section id="refund-policy" class="tab-content" role="tabpanel"
+               aria-labelledby="tablink-refund-policy" aria-hidden="true" tabindex="-1" data-searchable>
+        <h2>Refund &amp; Exchange Policy</h2>
+
+        <div class="policy-kicker">
+
+        </div>
+
+        <p>We want to ensure fairness and transparency with all purchases. Please review our policy carefully:</p>
         <ul>
           <li><strong>Refunds:</strong> Available within <strong>48 hours</strong> of purchase, but <strong>only for payments made via PayPal</strong>.</li>
           <li><strong>Non-Refundable Payments:</strong> Purchases made with gift cards or other alternative payment methods cannot be refunded.</li>
-          <li><strong>Exchanges:</strong> Within the first 48 hours, you may exchange your license 
-            (<em>1 Week, 1 Month, or Lifetime</em>) for another of equal value. 
-            This option is available <strong>only once per purchase</strong>.</li>
-          <li><strong>After 48 Hours:</strong> No refunds or exchanges will be possible,
-            as access during this time could otherwise allow unlimited usage.</li>
+          <li><strong>Exchanges:</strong> Within the first 48 hours, you may exchange your license
+            (<em>1 Week, 1 Month, or Lifetime</em>) for another of equal value. This option is available
+            <strong>only once per purchase</strong>.
+          </li>
+          <li><strong>After 48 Hours:</strong> No refunds or exchanges will be possible.</li>
         </ul>
-        <p>By completing a purchase, you acknowledge and agree to these terms.</p>
-      </div>
 
+        <p class="policy-legal">By completing a purchase, you acknowledge and agree to these terms.</p>
+
+       
+      </section>
     </main>
-
   </div>
 
-  <script src="frontier.js"></script>
+  <!-- Scripts -->
+  <script src="frontier.js" defer></script>
 </body>
 </html>
